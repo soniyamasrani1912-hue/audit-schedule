@@ -10,7 +10,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -27,16 +27,8 @@ jobs:
       run: |
         pyinstaller --onefile --windowed --add-data "index-5.html:." run.py
 
-    - name: Upload EXE as Release
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: "dist/run.exe"
-        tag: "v1.0"
-        body: "Audit Schedule Application"
-        allowUpdates: true
-
     - name: Upload EXE as Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: audit-schedule-exe
         path: dist/run.exe
