@@ -1,0 +1,42 @@
+name: Build EXE
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pywebview==5.0
+        pip install pyinstaller==6.1.0
+
+    - name: Build EXE
+      run: |
+        pyinstaller --onefile --windowed --add-data "index-5.html:." run.py
+
+    - name: Upload EXE as Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "dist/run.exe"
+        tag: "v1.0"
+        body: "Audit Schedule Application"
+        allowUpdates: true
+
+    - name: Upload EXE as Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: audit-schedule-exe
+        path: dist/run.exe
