@@ -22,13 +22,17 @@ jobs:
         python -m pip install --upgrade pip
         pip install pywebview==5.0
         pip install pyinstaller==6.1.0
+        pip install pillow
 
     - name: Build EXE
       run: |
-        pyinstaller --onefile --windowed --add-data "index-5.html:." run.py
+        python -m PyInstaller --onefile --windowed --name "AuditSchedule" --add-data "index-5.html:." run.py
 
-    - name: Upload EXE as Artifact
+    - name: Upload Artifact
       uses: actions/upload-artifact@v4
+      if: always()
       with:
-        name: audit-schedule-exe
-        path: dist/run.exe
+        name: build-output
+        path: |
+          dist/
+          build/
