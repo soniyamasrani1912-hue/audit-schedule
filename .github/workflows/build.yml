@@ -1,4 +1,4 @@
-name: Build EXE - Simple Method
+name: Build EXE
 
 on:
   push:
@@ -17,30 +17,16 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Install PyInstaller
-      run: pip install pyinstaller pywebview
-
-    - name: Create Spec File
+    - name: Install dependencies
       run: |
-        python -c "
-import PyInstaller.main
-PyInstaller.main.run([
-    'run.py',
-    '--onefile',
-    '--windowed',
-    '--name=AuditSchedule',
-    '--add-data=index-5.html;.',
-    '--distpath=dist',
-    '--specpath=build',
-    '--buildpath=build'
-])
-        "
+        pip install --upgrade pip
+        pip install pyinstaller pywebview
 
-    - name: Check dist folder
-      run: dir dist
+    - name: Build EXE
+      run: pyinstaller --onefile --windowed --add-data "index-5.html:." --name AuditSchedule run.py
 
-    - name: Upload EXE
+    - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: AuditSchedule.exe
+        name: AuditSchedule
         path: dist/AuditSchedule.exe
