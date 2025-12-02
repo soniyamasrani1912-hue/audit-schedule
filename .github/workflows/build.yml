@@ -24,7 +24,7 @@ jobs:
 
       - name: Build EXE
         run: |
-          pyinstaller --onefile --windowed --add-data "index-5.html;." --name AuditSchedule run.py
+          pyinstaller --onefile --windowed --add-data "index-5.html;." --name AgileCeremonyScheduler run.py
 
       - name: Upload EXE
         uses: actions/upload-artifact@v4
