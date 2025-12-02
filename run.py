@@ -1,14 +1,10 @@
 import webview
-import os
-import sys
 
-app_dir = os.path.dirname(os.path.abspath(__file__))
-html_path = os.path.join(app_dir, 'index-5.html')
-
-window = webview.create_window(
+webview.create_window(
     'Audit Schedule',
-    html_path,
+    'index-5.html',
     width=1200,
-    height=900
+    height=900,
+    min_size=(800, 600)
 )
 webview.start()
