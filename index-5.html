@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Agile Ceremony Scheduler</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <!-- xlsx-js-style full browser build for styling + writeFile -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.full.min.js"></script>
+
   <style>
     :root {
       --lowes-blue: #004990;
@@ -117,8 +120,6 @@
       border-bottom: 3px solid var(--lowes-orange);
       display: inline-block;
     }
-
-    h3 { color: var(--lowes-blue); margin-top: 16px; }
 
     table {
       border-collapse: collapse;
@@ -360,7 +361,6 @@
   </header>
 
   <main>
-    <!-- SECTION 1: AUDIT SCHEDULE -->
     <section class="section-card">
       <h2>Audit Schedule Setup</h2>
       <div>
@@ -400,15 +400,13 @@
       </div>
     </section>
 
-    <!-- SECTION 2: TEAM MEMBERS -->
     <section class="section-card">
       <h2>Team Members</h2>
-      <p>Add team members with their emails (up to 10 members). These emails will receive ceremony invitations.</p>
+      <p>Add team members with their emails (up to 10 members).</p>
       <div id="teamMembersContainer"></div>
       <button class="add-member-btn" id="addTeamMemberBtn">+ Add Team Member</button>
     </section>
 
-    <!-- SECTION 3: LEAVE PLANNING -->
     <section class="section-card">
       <h2>Leave Planning</h2>
       <p>Select team members and mark their leave dates (up to 10 leave entries)</p>
@@ -417,7 +415,6 @@
       <button class="add-member-btn" id="addLeaveBtn" style="display:none;">+ Add Leave</button>
     </section>
 
-    <!-- SECTION 4: PUBLIC HOLIDAYS -->
     <section class="section-card">
       <h2>Public Holidays</h2>
       <p>Add public holidays (up to 10 holidays)</p>
@@ -482,7 +479,7 @@
     let holidays = [];
     let auditTitle = '';
 
-    // -------- Team Members ----------
+    // ---------- Team members ----------
     function initializeTeamMembers() {
       const container = document.getElementById('teamMembersContainer');
       container.innerHTML = '';
@@ -495,7 +492,6 @@
         alert('Maximum 10 team members allowed.');
         return;
       }
-
       const index = teamMembers.length;
       const member = { name: '', email: '', color: teamMemberColors[index] };
       teamMembers.push(member);
@@ -524,20 +520,18 @@
                    style="width: 180px;">
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 8px; height: 30px;">
-          <div style="width: 20px; height: 20px; background: ${member.color}; border-radius: 3px; border: 1px solid #999;"></div>
+        <div style="display:flex;align-items:center;gap:8px;height:30px;">
+          <div style="width:20px;height:20px;background:${member.color};border-radius:3px;border:1px solid #999;"></div>
           ${teamMembers.length > 1 ? `<button class="remove-btn" onclick="removeTeamMember(${index})">Remove</button>` : ''}
         </div>
       `;
-
       container.appendChild(row);
 
-      row.querySelector('.team-member-name').addEventListener('change', function() {
+      row.querySelector('.team-member-name').addEventListener('change', function () {
         teamMembers[index].name = this.value;
         refreshLeaveDropdowns();
       });
-
-      row.querySelector('.team-member-email').addEventListener('change', function() {
+      row.querySelector('.team-member-email').addEventListener('change', function () {
         teamMembers[index].email = this.value;
       });
 
@@ -553,16 +547,14 @@
       refreshLeaveDropdowns();
     }
 
-    // -------- Leaves ----------
+    // ---------- Leave planning ----------
     function initializeLeaves() {
       const container = document.getElementById('leavesContainer');
       container.innerHTML = '';
       leaves = [];
-
       const hasTeamMembers = teamMembers.some(m => m.name);
       const placeholder = document.getElementById('leavePlaceholder');
       const addBtn = document.getElementById('addLeaveBtn');
-
       if (!hasTeamMembers) {
         placeholder.style.display = 'block';
         addBtn.style.display = 'none';
@@ -575,12 +567,10 @@
         alert('Please add team members first.');
         return;
       }
-
       if (leaves.length >= 10) {
         alert('Maximum 10 leave entries allowed.');
         return;
       }
-
       const index = leaves.length;
       const leave = { teamMemberId: '', fromDate: '', toDate: '' };
       leaves.push(leave);
@@ -592,16 +582,14 @@
 
       let memberOptions = '<option value="">-- Select Team Member --</option>';
       teamMembers.forEach((member, idx) => {
-        if (member.name) {
-          memberOptions += `<option value="${idx}">${member.name}</option>`;
-        }
+        if (member.name) memberOptions += `<option value="${idx}">${member.name}</option>`;
       });
 
       row.innerHTML = `
         <div class="leave-group">
           <div>
             <label>Team Member:</label>
-            <select class="leave-member-select" data-index="${index}" style="width: 150px;">
+            <select class="leave-member-select" data-index="${index}" style="width:150px;">
               ${memberOptions}
             </select>
           </div>
@@ -618,22 +606,19 @@
             <input type="date" class="leave-to-date" data-index="${index}">
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 8px; height: 30px;">
+        <div style="display:flex;align-items:center;gap:8px;height:30px;">
           ${leaves.length > 1 ? `<button class="remove-btn" onclick="removeLeave(${index})">Remove</button>` : ''}
         </div>
       `;
-
       container.appendChild(row);
 
-      row.querySelector('.leave-member-select').addEventListener('change', function() {
+      row.querySelector('.leave-member-select').addEventListener('change', function () {
         leaves[index].teamMemberId = this.value;
       });
-
-      row.querySelector('.leave-from-date').addEventListener('change', function() {
+      row.querySelector('.leave-from-date').addEventListener('change', function () {
         leaves[index].fromDate = this.value;
       });
-
-      row.querySelector('.leave-to-date').addEventListener('change', function() {
+      row.querySelector('.leave-to-date').addEventListener('change', function () {
         leaves[index].toDate = this.value;
       });
 
@@ -651,7 +636,6 @@
       const hasTeamMembers = teamMembers.some(m => m.name);
       const placeholder = document.getElementById('leavePlaceholder');
       const addBtn = document.getElementById('addLeaveBtn');
-
       if (hasTeamMembers) {
         placeholder.style.display = 'none';
         addBtn.style.display = 'inline-block';
@@ -659,21 +643,18 @@
         placeholder.style.display = 'block';
         addBtn.style.display = 'none';
       }
-
       document.querySelectorAll('.leave-member-select').forEach(select => {
         const currentValue = select.value;
         let memberOptions = '<option value="">-- Select Team Member --</option>';
         teamMembers.forEach((member, idx) => {
-          if (member.name) {
-            memberOptions += `<option value="${idx}">${member.name}</option>`;
-          }
+          if (member.name) memberOptions += `<option value="${idx}">${member.name}</option>`;
         });
         select.innerHTML = memberOptions;
         select.value = currentValue;
       });
     }
 
-    // -------- Holidays ----------
+    // ---------- Holidays ----------
     function initializeHolidays() {
       const container = document.getElementById('holidaysContainer');
       container.innerHTML = '';
@@ -686,7 +667,6 @@
         alert('Maximum 10 holidays allowed.');
         return;
       }
-
       const index = holidays.length;
       const holiday = { name: '', date: '' };
       holidays.push(holiday);
@@ -703,7 +683,7 @@
             <input type="text" placeholder="E.g., Independence Day"
                    data-index="${index}"
                    class="holiday-name"
-                   style="width: 180px;">
+                   style="width:180px;">
           </div>
         </div>
         <div class="holiday-group">
@@ -712,19 +692,17 @@
             <input type="date" data-index="${index}" class="holiday-date">
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 8px; height: 30px;">
-          <div style="width: 20px; height: 20px; background: #ffd4a3; border-radius: 3px; border: 1px solid #8b3a00;"></div>
+        <div style="display:flex;align-items:center;gap:8px;height:30px;">
+          <div style="width:20px;height:20px;background:#ffd4a3;border-radius:3px;border:1px solid #8b3a00;"></div>
           ${holidays.length > 1 ? `<button class="remove-btn" onclick="removeHoliday(${index})">Remove</button>` : ''}
         </div>
       `;
-
       container.appendChild(row);
 
-      row.querySelector('.holiday-name').addEventListener('change', function() {
+      row.querySelector('.holiday-name').addEventListener('change', function () {
         holidays[index].name = this.value;
       });
-
-      row.querySelector('.holiday-date').addEventListener('change', function() {
+      row.querySelector('.holiday-date').addEventListener('change', function () {
         holidays[index].date = this.value;
       });
 
@@ -749,7 +727,7 @@
       }
     }
 
-    // -------- Schedule ----------
+    // ---------- Schedule ----------
     function generateSchedule(startDate, sprintCount) {
       const rows = [];
       let sprintStart = new Date(startDate.getTime());
@@ -782,33 +760,29 @@
           sprintStart = retro;
         }
       }
-
       return rows;
     }
 
     function renderTable(rows) {
       if (!rows.length) return '<p>No schedule generated yet.</p>';
-
       let html = '<table><thead><tr>' +
-                 '<th>Audit Title</th><th>Sprint</th><th>Event</th><th>Date</th><th>Day</th>' +
-                 '</tr></thead><tbody>';
-
+        '<th>Audit Title</th><th>Sprint</th><th>Event</th><th>Date</th><th>Day</th>' +
+        '</tr></thead><tbody>';
       rows.forEach(r => {
         const cls = getEventClass(r.event);
         html += '<tr>' +
-                '<td>' + auditTitle + '</td>' +
-                '<td>' + r.sprint + '</td>' +
-                '<td class="' + cls + '">' + r.event + '</td>' +
-                '<td>' + formatDate(r.date) + '</td>' +
-                '<td>' + weekdayName(r.date) + '</td>' +
-                '</tr>';
+          '<td>' + auditTitle + '</td>' +
+          '<td>' + r.sprint + '</td>' +
+          '<td class="' + cls + '">' + r.event + '</td>' +
+          '<td>' + formatDate(r.date) + '</td>' +
+          '<td>' + weekdayName(r.date) + '</td>' +
+          '</tr>';
       });
-
       html += '</tbody></table>';
       return html;
     }
 
-    // -------- Calendar helpers ----------
+    // ---------- Calendar helpers ----------
     function dateKey(d) {
       return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
     }
@@ -827,14 +801,11 @@
       const map = {};
       leaves.forEach(leave => {
         if (!leave.teamMemberId || !leave.fromDate || !leave.toDate) return;
-
         const memberIdx = parseInt(leave.teamMemberId);
         const member = teamMembers[memberIdx];
         if (!member) return;
-
         const from = new Date(leave.fromDate);
         const to = new Date(leave.toDate);
-
         for (let d = new Date(from); d <= to; d = addDays(d, 1)) {
           const key = dateKey(d);
           if (!map[key]) map[key] = [];
@@ -848,7 +819,6 @@
       const map = {};
       holidays.forEach(holiday => {
         if (!holiday.date || !holiday.name) return;
-
         const holidayDate = new Date(holiday.date);
         const key = dateKey(holidayDate);
         if (!map[key]) map[key] = [];
@@ -865,8 +835,8 @@
 
       let html = '<div class="month-container">';
       html += '<div class="month-title">' +
-              monthStart.toLocaleDateString(undefined, { month: 'long', year: 'numeric' }) +
-              '</div>';
+        monthStart.toLocaleDateString(undefined, { month: 'long', year: 'numeric' }) +
+        '</div>';
 
       html += '<table class="calendar-table"><thead><tr>';
       const weekdays = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -882,7 +852,6 @@
           html += '</tr><tr>';
           weekday = 0;
         }
-
         const currentDate = new Date(year, monthIndex, day);
         const key = dateKey(currentDate);
         html += '<td>';
@@ -895,13 +864,11 @@
             html += '<span class="event-label ' + cls + '">' + displayText + '</span>';
           });
         }
-
         if (leavesByDate[key]) {
           leavesByDate[key].forEach(member => {
-            html += '<span class="leave-label" style="background: ' + member.color + ';">' + member.name + ' ON LEAVE</span>';
+            html += '<span class="leave-label" style="background:' + member.color + ';">' + member.name + ' ON LEAVE</span>';
           });
         }
-
         if (holidaysByDate[key]) {
           holidaysByDate[key].forEach(holiday => {
             html += '<span class="holiday-label">' + holiday.name + '</span>';
@@ -926,7 +893,6 @@
       if (!rows.length && Object.keys(leavesByDate).length === 0 && Object.keys(holidaysByDate).length === 0) {
         return '<p>No schedule, leaves, or holidays planned yet.</p>';
       }
-
       const eventsByDate = buildEventsByDate(rows);
 
       let minDate = new Date();
@@ -969,11 +935,10 @@
         month++;
         if (month === 12) { month = 0; year++; }
       }
-
       return html;
     }
 
-    // -------- Excel calendar export ----------
+    // ---------- Excel export with safe styles ----------
     function generateCalendarExcel(rows) {
       const eventsByDate = buildEventsByDate(rows);
       const leavesByDate = buildLeavesByDate();
@@ -981,7 +946,6 @@
 
       let minDate = new Date();
       let maxDate = new Date();
-
       if (rows.length > 0) {
         minDate = rows[0].date;
         maxDate = rows[0].date;
@@ -992,17 +956,6 @@
       }
 
       const workbook = XLSX.utils.book_new();
-
-      const colors = {
-        kickoff: 'FFF7A3',
-        retrospective: 'C6F6D5',
-        backlog: 'E0E7FF',
-        pov: 'E9D5FF',
-        planning: 'FFE4C4',
-        leave: 'FFCCCC',
-        holiday: 'FFD4A3',
-        light: 'F5F5F5'
-      };
 
       let year = minDate.getFullYear();
       let month = minDate.getMonth();
@@ -1016,27 +969,14 @@
         const daysInMonth = monthEnd.getDate();
 
         const sheetName = monthStart.toLocaleDateString(undefined, { month: 'short', year: '2-digit' });
-
         const data = [];
-        const cellStyles = [];
 
-        const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         data.push(weekdays);
-
-        for (let i = 0; i < 7; i++) {
-          if (!cellStyles[0]) cellStyles[0] = [];
-          cellStyles[0][i] = {
-            fill: { fgColor: { rgb: '004990' } },
-            font: { bold: true, color: { rgb: 'FFFFFF' } },
-            alignment: { horizontal: 'center', vertical: 'center' },
-            border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } }
-          };
-        }
 
         let day = 1;
         let weekday = firstWeekday;
         let currentWeek = new Array(7).fill('');
-        let dataRowIdx = 1;
 
         for (let i = 0; i < firstWeekday; i++) currentWeek[i] = '';
 
@@ -1044,30 +984,20 @@
           const currentDate = new Date(year, month, day);
           const key = dateKey(currentDate);
           let cellContent = day.toString();
-          let cellColor = colors.light;
 
           if (eventsByDate[key]) {
             eventsByDate[key].forEach(ev => {
               cellContent += '\n' + ev.event;
-              if (ev.event.includes('Audit Kickoff')) cellColor = colors.kickoff;
-              else if (ev.event.includes('Retrospective')) cellColor = colors.retrospective;
-              else if (ev.event.includes('Backlog Refinement')) cellColor = colors.backlog;
-              else if (ev.event.includes('POV')) cellColor = colors.pov;
-              else if (ev.event.includes('Sprint Planning')) cellColor = colors.planning;
             });
           }
-
           if (leavesByDate[key]) {
             leavesByDate[key].forEach(member => {
               cellContent += '\n' + member.name + ' ON LEAVE';
-              cellColor = colors.leave;
             });
           }
-
           if (holidaysByDate[key]) {
             holidaysByDate[key].forEach(holiday => {
               cellContent += '\n' + holiday.name;
-              cellColor = colors.holiday;
             });
           }
 
@@ -1075,30 +1005,7 @@
 
           if (weekday === 6 || day === daysInMonth) {
             data.push([...currentWeek]);
-
-            if (!cellStyles[dataRowIdx]) cellStyles[dataRowIdx] = [];
-            for (let colIdx = 0; colIdx < 7; colIdx++) {
-              let rowColor = colors.light;
-              const rowContent = currentWeek[colIdx];
-
-              if (rowContent) {
-                if (rowContent.includes('Audit Kickoff')) rowColor = colors.kickoff;
-                else if (rowContent.includes('Retrospective')) rowColor = colors.retrospective;
-                else if (rowContent.includes('Backlog Refinement')) rowColor = colors.backlog;
-                else if (rowContent.includes('POV')) rowColor = colors.pov;
-                else if (rowContent.includes('Sprint Planning')) rowColor = colors.planning;
-                else if (rowContent.includes('ON LEAVE')) rowColor = colors.leave;
-              }
-
-              cellStyles[dataRowIdx][colIdx] = {
-                fill: { fgColor: { rgb: rowColor } },
-                alignment: { vertical: 'top', wrapText: true },
-                border: { top: { style: 'thin' }, bottom: { style: 'thin' }, left: { style: 'thin' }, right: { style: 'thin' } }
-              };
-            }
-
             if (day < daysInMonth) currentWeek = new Array(7).fill('');
-            dataRowIdx++;
           }
 
           day++;
@@ -1107,20 +1014,67 @@
         }
 
         const worksheet = XLSX.utils.aoa_to_sheet(data);
-        worksheet['!cols'] = [{ wch: 22 },{ wch: 22 },{ wch: 22 },{ wch: 22 },{ wch: 22 },{ wch: 22 },{ wch: 22 }];
-        worksheet['!rows'] = [];
-        for (let i = 0; i < data.length; i++) worksheet['!rows'][i] = { hpx: i === 0 ? 28 : 110 };
 
-        for (let rowIdx = 0; rowIdx < data.length; rowIdx++) {
-          for (let colIdx = 0; colIdx < 7; colIdx++) {
-            const cellRef = XLSX.utils.encode_cell({ r: rowIdx, c: colIdx });
-            if (!worksheet[cellRef]) worksheet[cellRef] = { v: data[rowIdx][colIdx] || '' };
-            if (cellStyles[rowIdx] && cellStyles[rowIdx][colIdx]) worksheet[cellRef].s = cellStyles[rowIdx][colIdx];
+        worksheet['!cols'] = Array(7).fill({ wch: 22 });
+        if (!worksheet['!rows']) worksheet['!rows'] = [];
+
+        const defaultBorder = {
+          top: { style: 'thin', color: { rgb: '000000' } },
+          bottom: { style: 'thin', color: { rgb: '000000' } },
+          left: { style: 'thin', color: { rgb: '000000' } },
+          right: { style: 'thin', color: { rgb: '000000' } }
+        };
+
+        for (let r = 0; r < data.length; r++) {
+          worksheet['!rows'][r] = { hpx: r === 0 ? 28 : 110 };
+
+          for (let c = 0; c < 7; c++) {
+            const cellRef = XLSX.utils.encode_cell({ r, c });
+            const cellValue = data[r][c] || '';
+
+            if (!worksheet[cellRef]) worksheet[cellRef] = {};
+            worksheet[cellRef].v = cellValue;
+            worksheet[cellRef].t = 's';
+
+            let bgColor = 'FFFFFF';
+
+            if (r === 0) {
+              bgColor = '004990';
+              worksheet[cellRef].s = {
+                font: { bold: true, color: { rgb: 'FFFFFF' } },
+                fill: { type: 'pattern', patternType: 'solid', fgColor: { rgb: bgColor } },
+                alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
+                border: defaultBorder
+              };
+              continue;
+            }
+
+            if (cellValue.includes('Audit Kickoff')) {
+              bgColor = 'FFF7A3';
+            } else if (cellValue.includes('Retrospective')) {
+              bgColor = 'C6F6D5';
+            } else if (cellValue.includes('Backlog Refinement')) {
+              bgColor = 'E0E7FF';
+            } else if (cellValue.includes('POV')) {
+              bgColor = 'E9D5FF';
+            } else if (cellValue.includes('Sprint Planning')) {
+              bgColor = 'FFE4C4';
+            } else if (cellValue.includes('ON LEAVE')) {
+              bgColor = 'FFCCCC';
+            } else if (cellValue.trim() !== '') {
+              bgColor = 'F5F5F5';
+            }
+
+            worksheet[cellRef].s = {
+              font: { name: 'Calibri', size: 11 },
+              fill: { type: 'pattern', patternType: 'solid', fgColor: { rgb: bgColor } },
+              alignment: { horizontal: 'left', vertical: 'top', wrapText: true },
+              border: defaultBorder
+            };
           }
         }
 
         XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
-
         month++;
         if (month === 12) { month = 0; year++; }
       }
@@ -1128,10 +1082,20 @@
       XLSX.writeFile(workbook, 'audit_calendar.xlsx');
     }
 
-    // -------- ICS Export ----------
+    // ---------- Dynamic Teams link helper ----------
+    function buildTeamsUrl(row) {
+      const base = 'https://teams.microsoft.com/l/meetup-join';
+      const params = new URLSearchParams({
+        title: (auditTitle || 'Audit Ceremony') + ' - ' + row.event,
+        sprint: row.sprint,
+        date: row.date.toISOString().split('T')[0]
+      });
+      return base + '?' + params.toString();
+    }
+
+    // ---------- ICS export with dynamic Teams link ----------
     function rowsToICS(rows) {
       if (!rows.length) return '';
-
       const validAttendees = teamMembers.filter(tm => tm.email && tm.name);
 
       let ics = 'BEGIN:VCALENDAR\n';
@@ -1150,8 +1114,13 @@
         const dtstamp = formatDateISO(new Date());
         const dtstart = formatDateISO(startDate);
         const dtend = formatDateISO(endDate);
-        const summary = auditTitle ? auditTitle + ' || Sprint ' + r.sprint + ': ' + r.event : 'Sprint ' + r.sprint + ': ' + r.event;
-        const description = auditTitle ? auditTitle + ' - ' + r.event + ' for Sprint ' + r.sprint : 'Audit Agile Ceremony - ' + r.event + ' for Sprint ' + r.sprint;
+        const summary = (auditTitle ? auditTitle + ' || ' : '') + 'Sprint ' + r.sprint + ': ' + r.event;
+
+        const teamsUrl = buildTeamsUrl(r);
+        const descriptionBase = (auditTitle ? auditTitle + ' - ' + r.event + ' for Sprint ' + r.sprint
+                                            : 'Audit Agile Ceremony - ' + r.event + ' for Sprint ' + r.sprint);
+        const description = descriptionBase + '\\n\\nJoin Teams meeting: ' + teamsUrl;
+        const location = 'Microsoft Teams meeting - ' + teamsUrl;
 
         ics += 'BEGIN:VEVENT\n';
         ics += 'UID:' + uid + '\n';
@@ -1160,9 +1129,12 @@
         ics += 'DTEND:' + dtend + '\n';
         ics += 'SUMMARY:' + summary + '\n';
         ics += 'DESCRIPTION:' + description + '\n';
+        ics += 'LOCATION:' + location + '\n';
+        ics += 'URL:' + teamsUrl + '\n';
 
         validAttendees.forEach(attendee => {
-          ics += 'ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN=' + attendee.name + ':mailto:' + attendee.email + '\n';
+          ics += 'ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE;CN=' +
+                 attendee.name + ':mailto:' + attendee.email + '\n';
         });
 
         ics += 'STATUS:CONFIRMED\n';
@@ -1195,50 +1167,42 @@
       }
     }
 
-    // -------- Reset ----------
+    // ---------- Reset ----------
     function resetPlanner() {
       if (!confirm('This will clear the entire planner (schedule, team, leaves, holidays). Continue?')) return;
-
       document.getElementById('auditTitle').value = '';
       document.getElementById('startDate').value = '';
       document.getElementById('sprintCount').value = 2;
-
       document.getElementById('schedule').innerHTML = '';
       document.getElementById('calendarView').innerHTML = '';
-
       lastRows = [];
       teamMembers = [];
       leaves = [];
       holidays = [];
-
       initializeTeamMembers();
       initializeLeaves();
       initializeHolidays();
     }
 
-    // -------- Event listeners ----------
-    document.getElementById('generateBtn').addEventListener('click', function() {
+    // ---------- Event listeners ----------
+    document.getElementById('generateBtn').addEventListener('click', function () {
       auditTitle = document.getElementById('auditTitle').value;
       const startInput = document.getElementById('startDate').value;
       const countInput = parseInt(document.getElementById('sprintCount').value, 10);
-
       if (!startInput || isNaN(countInput) || countInput < 1) {
         alert('Please enter a valid start date and number of sprints.');
         return;
       }
-
       const startDate = new Date(startInput);
       const rows = generateSchedule(startDate, countInput);
       lastRows = rows;
-
       document.getElementById('schedule').innerHTML = renderTable(rows);
-
       const leavesByDate = buildLeavesByDate();
       const holidaysByDate = buildHolidaysByDate();
       document.getElementById('calendarView').innerHTML = renderCalendarView(rows, leavesByDate, holidaysByDate);
     });
 
-    document.getElementById('downloadExcelCalendarBtn').addEventListener('click', function() {
+    document.getElementById('downloadExcelCalendarBtn').addEventListener('click', function () {
       if (!lastRows.length) {
         alert('Please generate a schedule first.');
         return;
@@ -1246,7 +1210,7 @@
       generateCalendarExcel(lastRows);
     });
 
-    document.getElementById('downloadIcsBtn').addEventListener('click', function() {
+    document.getElementById('downloadIcsBtn').addEventListener('click', function () {
       if (!lastRows.length) {
         alert('Please generate a schedule first.');
         return;
