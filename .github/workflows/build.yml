@@ -29,5 +29,5 @@ jobs:
       - name: Upload EXE
         uses: actions/upload-artifact@v4
         with:
-          name: AuditSchedule
-          path: dist/AuditSchedule.exe
+          name: AgileCeremonyScheduler
+          path: dist/AgileCeremonyScheduler.exe
