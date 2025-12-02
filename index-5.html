@@ -3,10 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Agile Ceremony Scheduler</title>
-
-  <!-- xlsx-js-style full browser build for styling + writeFile -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.full.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     :root {
       --lowes-blue: #004990;
@@ -938,7 +935,7 @@
       return html;
     }
 
-    // ---------- Excel export with safe styles ----------
+    // ---------- Excel export with colors ----------
     function generateCalendarExcel(rows) {
       const eventsByDate = buildEventsByDate(rows);
       const leavesByDate = buildLeavesByDate();
@@ -956,6 +953,16 @@
       }
 
       const workbook = XLSX.utils.book_new();
+      const colors = {
+        kickoff: 'FFF7A3',
+        retrospective: 'C6F6D5',
+        backlog: 'E0E7FF',
+        pov: 'E9D5FF',
+        planning: 'FFE4C4',
+        leave: 'FFCCCC',
+        holiday: 'FFD4A3',
+        light: 'F5F5F5'
+      };
 
       let year = minDate.getFullYear();
       let month = minDate.getMonth();
@@ -970,13 +977,24 @@
 
         const sheetName = monthStart.toLocaleDateString(undefined, { month: 'short', year: '2-digit' });
         const data = [];
+        const cellStyles = [];
 
         const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         data.push(weekdays);
+        for (let i = 0; i < 7; i++) {
+          if (!cellStyles[0]) cellStyles[0] = [];
+          cellStyles[0][i] = {
+            fill: { fgColor: { rgb: '004990' } },
+            font: { bold: true, color: { rgb: 'FFFFFF' } },
+            alignment: { horizontal: 'center', vertical: 'center' },
+            border: { top:{style:'thin'},bottom:{style:'thin'},left:{style:'thin'},right:{style:'thin'} }
+          };
+        }
 
         let day = 1;
         let weekday = firstWeekday;
         let currentWeek = new Array(7).fill('');
+        let dataRowIdx = 1;
 
         for (let i = 0; i < firstWeekday; i++) currentWeek[i] = '';
 
@@ -984,20 +1002,28 @@
           const currentDate = new Date(year, month, day);
           const key = dateKey(currentDate);
           let cellContent = day.toString();
+          let cellColor = colors.light;
 
           if (eventsByDate[key]) {
             eventsByDate[key].forEach(ev => {
               cellContent += '\n' + ev.event;
+              if (ev.event.includes('Audit Kickoff')) cellColor = colors.kickoff;
+              else if (ev.event.includes('Retrospective')) cellColor = colors.retrospective;
+              else if (ev.event.includes('Backlog Refinement')) cellColor = colors.backlog;
+              else if (ev.event.includes('POV')) cellColor = colors.pov;
+              else if (ev.event.includes('Sprint Planning')) cellColor = colors.planning;
             });
           }
           if (leavesByDate[key]) {
             leavesByDate[key].forEach(member => {
               cellContent += '\n' + member.name + ' ON LEAVE';
+              cellColor = colors.leave;
             });
           }
           if (holidaysByDate[key]) {
             holidaysByDate[key].forEach(holiday => {
               cellContent += '\n' + holiday.name;
+              cellColor = colors.holiday;
             });
           }
 
@@ -1005,7 +1031,27 @@
 
           if (weekday === 6 || day === daysInMonth) {
             data.push([...currentWeek]);
+            if (!cellStyles[dataRowIdx]) cellStyles[dataRowIdx] = [];
+            for (let colIdx = 0; colIdx < 7; colIdx++) {
+              let rowColor = colors.light;
+              const rowContent = currentWeek[colIdx];
+              if (rowContent) {
+                if (rowContent.includes('Audit Kickoff')) rowColor = colors.kickoff;
+                else if (rowContent.includes('Retrospective')) rowColor = colors.retrospective;
+                else if (rowContent.includes('Backlog Refinement')) rowColor = colors.backlog;
+                else if (rowContent.includes('POV')) rowColor = colors.pov;
+                else if (rowContent.includes('Sprint Planning')) rowColor = colors.planning;
+                else if (rowContent.includes('ON LEAVE')) rowColor = colors.leave;
+                else if (!rowContent.includes('\n')) rowColor = colors.light;
+              }
+              cellStyles[dataRowIdx][colIdx] = {
+                fill: { fgColor: { rgb: rowColor } },
+                alignment: { vertical: 'top', wrapText: true },
+                border: { top:{style:'thin'},bottom:{style:'thin'},left:{style:'thin'},right:{style:'thin'} }
+              };
+            }
             if (day < daysInMonth) currentWeek = new Array(7).fill('');
+            dataRowIdx++;
           }
 
           day++;
@@ -1014,71 +1060,22 @@
         }
 
         const worksheet = XLSX.utils.aoa_to_sheet(data);
-
         worksheet['!cols'] = Array(7).fill({ wch: 22 });
-        if (!worksheet['!rows']) worksheet['!rows'] = [];
-
-        const defaultBorder = {
-          top: { style: 'thin', color: { rgb: '000000' } },
-          bottom: { style: 'thin', color: { rgb: '000000' } },
-          left: { style: 'thin', color: { rgb: '000000' } },
-          right: { style: 'thin', color: { rgb: '000000' } }
-        };
-
+        worksheet['!rows'] = [];
+        for (let i = 0; i < data.length; i++) {
+          worksheet['!rows'][i] = { hpx: i === 0 ? 28 : 110 };
+        }
         for (let r = 0; r < data.length; r++) {
-          worksheet['!rows'][r] = { hpx: r === 0 ? 28 : 110 };
-
           for (let c = 0; c < 7; c++) {
             const cellRef = XLSX.utils.encode_cell({ r, c });
-            const cellValue = data[r][c] || '';
-
-            if (!worksheet[cellRef]) worksheet[cellRef] = {};
-            worksheet[cellRef].v = cellValue;
-            worksheet[cellRef].t = 's';
-
-            let bgColor = 'FFFFFF';
-
-            if (r === 0) {
-              bgColor = '004990';
-              worksheet[cellRef].s = {
-                font: { bold: true, color: { rgb: 'FFFFFF' } },
-                fill: { type: 'pattern', patternType: 'solid', fgColor: { rgb: bgColor } },
-                alignment: { horizontal: 'center', vertical: 'center', wrapText: true },
-                border: defaultBorder
-              };
-              continue;
-            }
-
-            if (cellValue.includes('Audit Kickoff')) {
-              bgColor = 'FFF7A3';
-            } else if (cellValue.includes('Retrospective')) {
-              bgColor = 'C6F6D5';
-            } else if (cellValue.includes('Backlog Refinement')) {
-              bgColor = 'E0E7FF';
-            } else if (cellValue.includes('POV')) {
-              bgColor = 'E9D5FF';
-            } else if (cellValue.includes('Sprint Planning')) {
-              bgColor = 'FFE4C4';
-            } else if (cellValue.includes('ON LEAVE')) {
-              bgColor = 'FFCCCC';
-            } else if (cellValue.trim() !== '') {
-              bgColor = 'F5F5F5';
-            }
-
-            worksheet[cellRef].s = {
-              font: { name: 'Calibri', size: 11 },
-              fill: { type: 'pattern', patternType: 'solid', fgColor: { rgb: bgColor } },
-              alignment: { horizontal: 'left', vertical: 'top', wrapText: true },
-              border: defaultBorder
-            };
+            if (!worksheet[cellRef]) worksheet[cellRef] = { v: data[r][c] || '' };
+            if (cellStyles[r] && cellStyles[r][c]) worksheet[cellRef].s = cellStyles[r][c];
           }
         }
-
         XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
         month++;
         if (month === 12) { month = 0; year++; }
       }
-
       XLSX.writeFile(workbook, 'audit_calendar.xlsx');
     }
 
@@ -1116,7 +1113,7 @@
         const dtend = formatDateISO(endDate);
         const summary = (auditTitle ? auditTitle + ' || ' : '') + 'Sprint ' + r.sprint + ': ' + r.event;
 
-        const teamsUrl = buildTeamsUrl(r);
+        const teamsUrl = buildTeamsUrl(r);  // dynamic per ceremony
         const descriptionBase = (auditTitle ? auditTitle + ' - ' + r.event + ' for Sprint ' + r.sprint
                                             : 'Audit Agile Ceremony - ' + r.event + ' for Sprint ' + r.sprint);
         const description = descriptionBase + '\\n\\nJoin Teams meeting: ' + teamsUrl;
