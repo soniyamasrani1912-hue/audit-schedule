@@ -17,11 +17,7 @@
       --event-planning: #FFE4C4;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -40,16 +36,9 @@
       border-bottom: 4px solid var(--lowes-orange);
     }
 
-    header img {
-      height: 48px;
-      width: auto;
-    }
+    header img { height: 48px; width: auto; }
 
-    .header-content {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
+    .header-content { display: flex; flex-direction: column; gap: 2px; }
 
     header h1 {
       font-size: 28px;
@@ -58,20 +47,14 @@
       letter-spacing: 0.5px;
     }
 
-    header p {
-      font-size: 12px;
-      opacity: 0.9;
-      margin: 0;
-    }
+    header p { font-size: 12px; opacity: 0.9; margin: 0; }
 
     main {
       padding: 30px;
       max-width: 1400px;
-      margin: 0 auto;
+      margin: 24px auto;
       background: #ffffff;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-top: 24px;
-      margin-bottom: 24px;
       border-radius: 12px;
       border-left: 5px solid var(--lowes-orange);
     }
@@ -120,23 +103,11 @@
       box-shadow: 0 4px 8px rgba(0, 73, 144, 0.3);
     }
 
-    .button.secondary {
-      background: var(--lowes-light);
-      color: #00324f;
-    }
+    .button.secondary { background: var(--lowes-light); color: #00324f; }
+    .button.secondary:hover { background: #0d9dc4; }
 
-    .button.secondary:hover {
-      background: #0d9dc4;
-    }
-
-    .button.success {
-      background: #22c55e;
-      color: white;
-    }
-
-    .button.success:hover {
-      background: #16a34a;
-    }
+    .button.success { background: #22c55e; color: white; }
+    .button.success:hover { background: #16a34a; }
 
     h2 {
       margin-top: 24px;
@@ -147,10 +118,7 @@
       display: inline-block;
     }
 
-    h3 {
-      color: var(--lowes-blue);
-      margin-top: 16px;
-    }
+    h3 { color: var(--lowes-blue); margin-top: 16px; }
 
     table {
       border-collapse: collapse;
@@ -274,18 +242,8 @@
       border-left: 4px solid var(--lowes-orange);
     }
 
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .legend-color {
-      width: 16px;
-      height: 16px;
-      border-radius: 3px;
-      border: 1px solid #999;
-    }
+    .legend-item { display: flex; align-items: center; gap: 8px; }
+    .legend-color { width: 16px; height: 16px; border-radius: 3px; border: 1px solid #999; }
 
     .section-card {
       background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
@@ -297,10 +255,7 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
-    .section-card h2 {
-      margin-top: 0;
-      border-bottom: none;
-    }
+    .section-card h2 { margin-top: 0; border-bottom: none; }
 
     .section-card p {
       font-size: 13px;
@@ -308,7 +263,9 @@
       margin-top: 8px;
     }
 
-    .team-member-row {
+    .team-member-row,
+    .leave-row,
+    .holiday-row {
       display: flex;
       gap: 12px;
       margin-bottom: 12px;
@@ -321,20 +278,27 @@
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
-    .team-member-row input {
+    .team-member-row input,
+    .leave-row input,
+    .leave-row select,
+    .holiday-row input {
       margin-bottom: 0;
       padding: 6px 8px;
       font-size: 12px;
     }
 
-    .team-member-row label {
+    .team-member-row label,
+    .leave-row label,
+    .holiday-row label {
       width: auto;
       margin-bottom: 0;
       font-size: 12px;
       margin-right: 4px;
     }
 
-    .team-member-group {
+    .team-member-group,
+    .leave-group,
+    .holiday-group {
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -353,9 +317,7 @@
       transition: background 0.3s;
     }
 
-    .remove-btn:hover {
-      background: #dc2626;
-    }
+    .remove-btn:hover { background: #dc2626; }
 
     .add-member-btn {
       padding: 10px 16px;
@@ -375,69 +337,6 @@
       background: #16a34a;
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(34, 197, 94, 0.3);
-    }
-
-    .leave-row {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 12px;
-      align-items: flex-start;
-      background: #fff;
-      padding: 12px;
-      border-radius: 6px;
-      border: 1px solid #e5e7eb;
-      flex-wrap: wrap;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-
-    .leave-row input, .leave-row select {
-      margin-bottom: 0;
-      padding: 6px 8px;
-      font-size: 12px;
-    }
-
-    .leave-row label {
-      width: auto;
-      margin-bottom: 0;
-      font-size: 12px;
-      margin-right: 4px;
-    }
-
-    .leave-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .holiday-row {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 12px;
-      align-items: flex-start;
-      background: #fff;
-      padding: 12px;
-      border-radius: 6px;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-
-    .holiday-row input {
-      margin-bottom: 0;
-      padding: 6px 8px;
-      font-size: 12px;
-    }
-
-    .holiday-row label {
-      width: auto;
-      margin-bottom: 0;
-      font-size: 12px;
-      margin-right: 4px;
-    }
-
-    .holiday-group {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
     }
 
     .no-members-message {
@@ -477,7 +376,6 @@
         <input type="number" id="sprintCount" min="1" value="2">
       </div>
 
-      <!-- Buttons: CSV removed, Reset added -->
       <button class="button" id="generateBtn">Generate Schedule</button>
       <button class="button secondary" id="downloadExcelCalendarBtn">Download Calendar (Excel)</button>
       <button class="button success" id="downloadIcsBtn">Add to Outlook (ICS)</button>
@@ -502,7 +400,7 @@
       </div>
     </section>
 
-    <!-- SECTION 2: TEAM MEMBERS WITH EMAILS -->
+    <!-- SECTION 2: TEAM MEMBERS -->
     <section class="section-card">
       <h2>Team Members</h2>
       <p>Add team members with their emails (up to 10 members). These emails will receive ceremony invitations.</p>
@@ -539,7 +437,6 @@
   </main>
 
   <script>
-    // Team member colors
     const teamMemberColors = [
       '#fca5a5', '#fed7aa', '#fef3c7', '#bfdbfe', '#bfb5ff',
       '#d8b4fe', '#f0abfc', '#fbcfe8', '#a7f3d0', '#86efac'
@@ -579,23 +476,13 @@
       return '';
     }
 
-    function getEventColorHex(eventName) {
-      const lower = eventName.toLowerCase();
-      if (lower.includes('kickoff')) return '#fff7a3';
-      if (lower.includes('retrospective')) return '#c6f6d5';
-      if (lower.includes('backlog')) return '#e0e7ff';
-      if (lower.includes('pov')) return '#e9d5ff';
-      if (lower.includes('planning')) return '#ffe4c4';
-      return '#ffffff';
-    }
-
     let lastRows = [];
     let teamMembers = [];
     let leaves = [];
     let holidays = [];
     let auditTitle = '';
 
-    // ============ Team Member Functions ============
+    // -------- Team Members ----------
     function initializeTeamMembers() {
       const container = document.getElementById('teamMembersContainer');
       container.innerHTML = '';
@@ -666,7 +553,7 @@
       refreshLeaveDropdowns();
     }
 
-    // ============ Leave Planning Functions ============
+    // -------- Leaves ----------
     function initializeLeaves() {
       const container = document.getElementById('leavesContainer');
       container.innerHTML = '';
@@ -786,7 +673,7 @@
       });
     }
 
-    // ============ Public Holidays Functions ============
+    // -------- Holidays ----------
     function initializeHolidays() {
       const container = document.getElementById('holidaysContainer');
       container.innerHTML = '';
@@ -862,7 +749,7 @@
       }
     }
 
-    // ============ Schedule Functions ============
+    // -------- Schedule ----------
     function generateSchedule(startDate, sprintCount) {
       const rows = [];
       let sprintStart = new Date(startDate.getTime());
@@ -921,7 +808,7 @@
       return html;
     }
 
-    // ============ Calendar View Functions ============
+    // -------- Calendar helpers ----------
     function dateKey(d) {
       return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
     }
@@ -987,9 +874,7 @@
       html += '</tr></thead><tbody><tr>';
 
       let day = 1;
-      for (let i = 0; i < firstWeekday; i++) {
-        html += '<td></td>';
-      }
+      for (let i = 0; i < firstWeekday; i++) html += '<td></td>';
 
       let weekday = firstWeekday;
       while (day <= daysInMonth) {
@@ -1024,7 +909,6 @@
         }
 
         html += '</td>';
-
         day++;
         weekday++;
       }
@@ -1083,16 +967,13 @@
       while (year < endYear || (year === endYear && month <= endMonth)) {
         html += renderMonthCalendar(year, month, eventsByDate, leavesByDate, holidaysByDate);
         month++;
-        if (month === 12) {
-          month = 0;
-          year++;
-        }
+        if (month === 12) { month = 0; year++; }
       }
 
       return html;
     }
 
-    // ============ Excel Calendar Export ============
+    // -------- Excel calendar export ----------
     function generateCalendarExcel(rows) {
       const eventsByDate = buildEventsByDate(rows);
       const leavesByDate = buildLeavesByDate();
@@ -1157,9 +1038,7 @@
         let currentWeek = new Array(7).fill('');
         let dataRowIdx = 1;
 
-        for (let i = 0; i < firstWeekday; i++) {
-          currentWeek[i] = '';
-        }
+        for (let i = 0; i < firstWeekday; i++) currentWeek[i] = '';
 
         while (day <= daysInMonth) {
           const currentDate = new Date(year, month, day);
@@ -1209,7 +1088,6 @@
                 else if (rowContent.includes('POV')) rowColor = colors.pov;
                 else if (rowContent.includes('Sprint Planning')) rowColor = colors.planning;
                 else if (rowContent.includes('ON LEAVE')) rowColor = colors.leave;
-                else if (rowContent.match(/^(\d+)$/)) rowColor = colors.light;
               }
 
               cellStyles[dataRowIdx][colIdx] = {
@@ -1219,9 +1097,7 @@
               };
             }
 
-            if (day < daysInMonth) {
-              currentWeek = new Array(7).fill('');
-            }
+            if (day < daysInMonth) currentWeek = new Array(7).fill('');
             dataRowIdx++;
           }
 
@@ -1231,44 +1107,28 @@
         }
 
         const worksheet = XLSX.utils.aoa_to_sheet(data);
-
-        worksheet['!cols'] = [
-          { wch: 22 }, { wch: 22 }, { wch: 22 }, { wch: 22 },
-          { wch: 22 }, { wch: 22 }, { wch: 22 }
-        ];
-
+        worksheet['!cols'] = [{ wch: 22 },{ wch: 22 },{ wch: 22 },{ wch: 22 },{ wch: 22 },{ wch: 22 },{ wch: 22 }];
         worksheet['!rows'] = [];
-        for (let i = 0; i < data.length; i++) {
-          worksheet['!rows'][i] = { hpx: i === 0 ? 28 : 110 };
-        }
+        for (let i = 0; i < data.length; i++) worksheet['!rows'][i] = { hpx: i === 0 ? 28 : 110 };
 
         for (let rowIdx = 0; rowIdx < data.length; rowIdx++) {
           for (let colIdx = 0; colIdx < 7; colIdx++) {
             const cellRef = XLSX.utils.encode_cell({ r: rowIdx, c: colIdx });
-
-            if (!worksheet[cellRef]) {
-              worksheet[cellRef] = { v: data[rowIdx][colIdx] || '' };
-            }
-
-            if (cellStyles[rowIdx] && cellStyles[rowIdx][colIdx]) {
-              worksheet[cellRef].s = cellStyles[rowIdx][colIdx];
-            }
+            if (!worksheet[cellRef]) worksheet[cellRef] = { v: data[rowIdx][colIdx] || '' };
+            if (cellStyles[rowIdx] && cellStyles[rowIdx][colIdx]) worksheet[cellRef].s = cellStyles[rowIdx][colIdx];
           }
         }
 
         XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
 
         month++;
-        if (month === 12) {
-          month = 0;
-          year++;
-        }
+        if (month === 12) { month = 0; year++; }
       }
 
       XLSX.writeFile(workbook, 'audit_calendar.xlsx');
     }
 
-    // ============ ICS Export ============
+    // -------- ICS Export ----------
     function rowsToICS(rows) {
       if (!rows.length) return '';
 
@@ -1315,19 +1175,27 @@
     }
 
     function downloadICS(filename, content) {
-      const blob = new Blob([content], { type: 'text/calendar;charset=utf-8;' });
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      link.setAttribute('href', url);
-      link.setAttribute('download', filename);
-      link.style.visibility = 'hidden';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      try {
+        const blob = new Blob([content], { type: 'text/calendar;charset=utf-8;' });
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+          window.navigator.msSaveOrOpenBlob(blob, filename);
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      } catch (e) {
+        console.error('ICS download failed', e);
+        alert('Could not start ICS download in this environment.');
+      }
     }
 
-    // ============ Reset Planner ============
+    // -------- Reset ----------
     function resetPlanner() {
       if (!confirm('This will clear the entire planner (schedule, team, leaves, holidays). Continue?')) return;
 
@@ -1348,7 +1216,7 @@
       initializeHolidays();
     }
 
-    // ============ Event Listeners ============
+    // -------- Event listeners ----------
     document.getElementById('generateBtn').addEventListener('click', function() {
       auditTitle = document.getElementById('auditTitle').value;
       const startInput = document.getElementById('startDate').value;
@@ -1388,7 +1256,6 @@
     });
 
     document.getElementById('resetBtn').addEventListener('click', resetPlanner);
-
     document.getElementById('addTeamMemberBtn').addEventListener('click', addTeamMember);
     document.getElementById('addLeaveBtn').addEventListener('click', addLeave);
     document.getElementById('addHolidayBtn').addEventListener('click', addHoliday);
